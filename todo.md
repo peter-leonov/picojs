@@ -5,6 +5,7 @@ Try to implement a tiny language but full dev stack.
 - JS is our C++
 - no dependencies
 - pico JS implementation
+- it's fun and easy to follow
 
 ## Today
 
