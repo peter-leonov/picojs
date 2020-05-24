@@ -9,9 +9,13 @@ Try to implement a tiny language but full dev stack.
 
 ## Today
 
-- [ ] simple lexer (tokenazier)
+- [x] simple lexer (tokenazier)
+- [x] context aware errors for lexer
+
+## Tomorrow
+
 - [ ] simple parser (produces AST)
-- [ ] context aware errors
+- [ ] context aware errors for parser
 
 ## Later
 

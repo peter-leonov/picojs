@@ -1,6 +1,7 @@
-const input = "7 \t 7777   77";
+const input = "123 456 789 0";
 
 function* lexer(str) {
+  // little iterator ♥
   let cursor = 0;
   let char = str[cursor];
 
@@ -11,7 +12,18 @@ function* lexer(str) {
 
   function number() {
     let buffer = "";
-    while (char === "7") {
+    while (
+      char === "0" ||
+      char === "1" ||
+      char === "2" ||
+      char === "3" ||
+      char === "4" ||
+      char === "5" ||
+      char === "6" ||
+      char === "7" ||
+      char === "8" ||
+      char === "9"
+    ) {
       buffer += char;
       next();
     }
@@ -19,7 +31,7 @@ function* lexer(str) {
     if (buffer.length >= 1) {
       return {
         type: "number",
-        value: buffer,
+        value: Number(buffer),
       };
     }
 
@@ -27,24 +39,12 @@ function* lexer(str) {
   }
 
   function whitespace() {
-    let buffer = "";
-    while (char === " ") {
-      buffer += char;
+    while (char === " " || char === "\t") {
       next();
     }
-
-    if (buffer.length >= 1) {
-      return {
-        type: "whitespace",
-        value: buffer,
-      };
-    }
-
-    return null;
   }
 
   function eof() {
-    char = str[cursor];
     if (char === undefined) {
       return {
         type: "EOF",
@@ -55,7 +55,8 @@ function* lexer(str) {
   }
 
   for (;;) {
-    const token = number() || whitespace() || eof();
+    whitespace();
+    const token = number() || eof();
 
     if (token) {
       yield token;
