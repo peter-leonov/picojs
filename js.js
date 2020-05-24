@@ -1,31 +1,68 @@
-const input = "777";
+const input = "7 \t 7777   77";
 
 function* lexer(str) {
-  for (let cursor = 0; cursor <= str.length; cursor++) {
-    let char = str[cursor];
+  let cursor = 0;
+  let char = str[cursor];
 
-    function number() {
-      let value = "";
-      for (; cursor <= str.length; cursor++) {
-        char = str[cursor];
-        if (char === "7") {
-          value += char;
-        } else {
-          break;
-        }
-      }
+  function next() {
+    cursor++;
+    char = str[cursor];
+  }
+
+  function number() {
+    let buffer = "";
+    while (char === "7") {
+      buffer += char;
+      next();
+    }
+
+    if (buffer.length >= 1) {
       return {
         type: "number",
-        value,
+        value: buffer,
       };
     }
 
-    if (char === "7") {
-      yield number();
-    } else if (char === undefined) {
-      yield {
+    return null;
+  }
+
+  function whitespace() {
+    let buffer = "";
+    while (char === " ") {
+      buffer += char;
+      next();
+    }
+
+    if (buffer.length >= 1) {
+      return {
+        type: "whitespace",
+        value: buffer,
+      };
+    }
+
+    return null;
+  }
+
+  function eof() {
+    char = str[cursor];
+    if (char === undefined) {
+      return {
         type: "EOF",
       };
+    }
+
+    return null;
+  }
+
+  for (;;) {
+    const token = number() || whitespace() || eof();
+
+    if (token) {
+      yield token;
+
+      if (token.type === "EOF") {
+        break;
+      }
     } else {
       throw new SyntaxError(
         `unexpected character "${char}" at ${cursor + 1}`
