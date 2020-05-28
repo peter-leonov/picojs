@@ -1,4 +1,7 @@
-const input = "123 456 789 0";
+import { readFileSync } from "fs";
+
+const file = "./source.js";
+const input = String(readFileSync(file));
 
 function isNumeric(c) {
   return "0" <= c && c <= "9";
@@ -16,6 +19,11 @@ function* lexer(str) {
     char = str[cursor];
     // ???
     column++;
+  }
+
+  function newline() {
+    line++;
+    column = 1;
   }
 
   function number() {
@@ -53,6 +61,22 @@ function* lexer(str) {
     return true;
   }
 
+  function eol() {
+    if (char === "\n") {
+      next();
+      newline();
+    } else {
+      return null;
+    }
+
+    while (char === "\n") {
+      next();
+      newline();
+    }
+
+    return true;
+  }
+
   function eof() {
     if (char === undefined) {
       return {
@@ -64,7 +88,7 @@ function* lexer(str) {
   }
 
   for (;;) {
-    const token = whitespace() || number() || eof();
+    const token = whitespace() || number() || eol() || eof();
 
     if (token) {
       if (token === true) {
@@ -78,7 +102,7 @@ function* lexer(str) {
       }
     } else {
       throw new SyntaxError(
-        `unexpected character "${char}" at ${cursor + 1}`
+        `unexpected character "${char}" at ${file}:${line}:${column}`
       );
     }
   }
