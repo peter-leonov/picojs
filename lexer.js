@@ -20,6 +20,17 @@ export function* lexer(file, str) {
     column = 1;
   }
 
+  function operator() {
+    if (char === "+") {
+      next();
+      return {
+        type: "PlusToken",
+      };
+    }
+
+    return null;
+  }
+
   function number() {
     let buffer = "";
     while (isNumeric(char)) {
@@ -29,7 +40,7 @@ export function* lexer(file, str) {
 
     if (buffer.length >= 1) {
       return {
-        type: "number",
+        type: "NumbericLiteral",
         value: Number(buffer),
       };
     }
@@ -74,7 +85,7 @@ export function* lexer(file, str) {
   function eof() {
     if (char === undefined) {
       return {
-        type: "EOF",
+        type: "EndOfFileToken",
       };
     }
 
@@ -82,7 +93,7 @@ export function* lexer(file, str) {
   }
 
   for (;;) {
-    const token = whitespace() || number() || eol() || eof();
+    const token = whitespace() || operator() || number() || eol();
 
     if (token) {
       if (token === true) {
@@ -91,13 +102,16 @@ export function* lexer(file, str) {
 
       yield token;
 
-      if (token.type === "EOF") {
-        break;
-      }
-    } else {
-      throw new SyntaxError(
-        `unexpected character "${char}" at ${file}:${line}:${column}`
-      );
+      continue;
     }
+
+    const maybeEof = eof();
+    if (maybeEof) {
+      break;
+    }
+
+    throw new SyntaxError(
+      `unexpected character "${char}" at ${file}:${line}:${column}`
+    );
   }
 }
