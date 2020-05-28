@@ -7,12 +7,12 @@ Try to implement a tiny language but full dev stack.
 - pico JS implementation
 - it's fun and easy to follow
 
-## Today
+## Stream 1
 
 - [x] simple lexer (tokenazier)
 - [x] context aware errors for lexer
 
-## Tomorrow
+## Stream 2
 
 - [ ] simple parser (produces AST)
 - [ ] context aware errors for parser

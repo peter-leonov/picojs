@@ -1,5 +1,9 @@
 const input = "123 456 789 0";
 
+function isNumeric(c) {
+  return "0" <= c && c <= "9";
+}
+
 function* lexer(str) {
   // little iterator ♥
   let cursor = 0;
@@ -12,18 +16,7 @@ function* lexer(str) {
 
   function number() {
     let buffer = "";
-    while (
-      char === "0" ||
-      char === "1" ||
-      char === "2" ||
-      char === "3" ||
-      char === "4" ||
-      char === "5" ||
-      char === "6" ||
-      char === "7" ||
-      char === "8" ||
-      char === "9"
-    ) {
+    while (isNumeric(char)) {
       buffer += char;
       next();
     }
@@ -76,4 +69,3 @@ console.log("start");
 for (const token of lexer(input)) {
   console.log(token);
 }
-console.log("finish");
