@@ -6,12 +6,16 @@ function isNumeric(c) {
 
 function* lexer(str) {
   // little iterator ♥
+  let line = 1;
+  let column = 1;
   let cursor = 0;
   let char = str[cursor];
 
   function next() {
     cursor++;
     char = str[cursor];
+    // ???
+    column++;
   }
 
   function number() {
@@ -31,10 +35,22 @@ function* lexer(str) {
     return null;
   }
 
+  function isWhitespace(c) {
+    return c === " " || c === "\t";
+  }
+
   function whitespace() {
-    while (char === " " || char === "\t") {
+    if (isWhitespace(char)) {
+      next();
+    } else {
+      return null;
+    }
+
+    while (isWhitespace(char)) {
       next();
     }
+
+    return true;
   }
 
   function eof() {
@@ -48,10 +64,13 @@ function* lexer(str) {
   }
 
   for (;;) {
-    whitespace();
-    const token = number() || eof();
+    const token = whitespace() || number() || eof();
 
     if (token) {
+      if (token === true) {
+        continue;
+      }
+
       yield token;
 
       if (token.type === "EOF") {
