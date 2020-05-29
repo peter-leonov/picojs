@@ -23,37 +23,41 @@ export function parser(tokens) {
   }
 
   function BinaryExpression() {
-    const left = NumericLiteral();
-    if (!left) return null;
+    const head = NumericLiteral();
+    if (!head) return null;
 
-    return BinaryExpressionTail(left);
+    return BinaryExpressionTail(head);
   }
   function BinaryExpressionTail(left) {
     const plus = PlusToken();
-    if (!plus) return null;
+    if (!plus) return left;
     const right = NumericLiteral();
-    if (!right) return null;
+    if (!right) {
+      throw new SyntaxError(
+        `Expected token type "NumericLiteral" got "${token.type}"`
+      );
+    }
 
-    return {
+    const node = {
       type: "BinaryExpression",
       left,
       operatorToken: plus,
       right,
       // TODO: loc
     };
+
+    return BinaryExpressionTail(node);
   }
 
   next();
   const program = BinaryExpression();
 
-  if (program == null) {
-    // @ts-ignore
-    throw new SyntaxError(`Panic!`);
-  }
-
-  if (token != null) {
-    // @ts-ignore
-    throw new SyntaxError(`Unknown token ${token.type}`);
+  // @ts-ignore
+  if (token.type != "EndOfFileToken") {
+    throw new SyntaxError(
+      // @ts-ignore
+      `Expected token type "EndOfFileToken" got "${token.type}"`
+    );
   }
 
   return program;
