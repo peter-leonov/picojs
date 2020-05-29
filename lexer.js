@@ -109,6 +109,7 @@ export function* lexer(file, str) {
 
     const maybeEof = eof();
     if (maybeEof) {
+      yield maybeEof;
       break;
     }
 
