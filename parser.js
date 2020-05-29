@@ -1,4 +1,4 @@
-export function parser(tokens) {
+export function parser(file, tokens) {
   let token = null;
 
   function next() {
@@ -34,7 +34,7 @@ export function parser(tokens) {
     const right = NumericLiteral();
     if (!right) {
       throw new SyntaxError(
-        `Expected token type "NumericLiteral" got "${token.type}"`
+        `Expected token type "NumericLiteral" got "${token.type}" at ${file}:${token.loc.start.line}:${token.loc.start.column}`
       );
     }
 
@@ -56,7 +56,7 @@ export function parser(tokens) {
   if (token.type != "EndOfFileToken") {
     throw new SyntaxError(
       // @ts-ignore
-      `Expected token type "EndOfFileToken" got "${token.type}"`
+      `Expected token type "EndOfFileToken" got "${token.type}" at ${file}:${token.loc.start.line}:${token.loc.start.column}`
     );
   }
 
