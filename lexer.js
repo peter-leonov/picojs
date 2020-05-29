@@ -24,9 +24,12 @@ export function* lexer(file, str) {
 
   function operator() {
     if (char === "+") {
+      const start = { line, column };
       next();
+      const end = { line, column };
       return {
         type: "PlusToken",
+        loc: { start, end },
       };
     }
 
@@ -35,15 +38,18 @@ export function* lexer(file, str) {
 
   function number() {
     let buffer = "";
+    const start = { line, column };
     while (isNumeric(char)) {
       buffer += char;
       next();
     }
 
     if (buffer.length >= 1) {
+      const end = { line, column };
       return {
         type: "NumericLiteral",
         value: Number(buffer),
+        loc: { start, end },
       };
     }
 
@@ -86,8 +92,11 @@ export function* lexer(file, str) {
 
   function eof() {
     if (char === undefined) {
+      const start = { line, column };
+      const end = start;
       return {
         type: "EndOfFileToken",
+        loc: { start, end },
       };
     }
 
