@@ -14,13 +14,17 @@ Try to implement a tiny language but full dev stack.
 
 ## Stream 2
 
-- [ ] simple parser (produces AST)
-- [ ] context aware errors for parser
+- [x] simple parser (produces AST)
+- [x] context aware errors for parser
+
+## Stream 3
+
+- [ ] implement AST evaluator
+- [ ] context aware errors for evaluator
 
 ## Later
 
 - [ ] extend lexer and parser with conditionals
-- [ ] implement AST evaluator
 - [ ] add some syntax highlighting
 - [ ] primitive type checking
 - [ ] bytecode emission and execution
