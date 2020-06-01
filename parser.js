@@ -3,6 +3,9 @@ export function parser(file, tokens) {
 
   function next() {
     token = tokens.next().value;
+    if (!token) {
+      throw new TypeError("next token is undefined");
+    }
     console.log("parser: ", token && token.type);
   }
 
