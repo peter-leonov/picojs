@@ -2,7 +2,7 @@ const { lexer } = require("./lexer.js");
 
 describe("lexer", () => {
   it("return a generator", () => {
-    const iter = [][Symbol.iterator]();
+    const iter = [].values();
     const tokens = lexer("file", "");
     expect(tokens).toBeInstanceOf(iter.constructor);
   });
@@ -13,7 +13,9 @@ describe("lexer", () => {
   });
 
   it("throws SyntaxError for an unknown charater", () => {
-    expect(() => [...lexer("file", "%%%")]).toThrowErrorMatchingInlineSnapshot(
+    expect(() => [
+      ...lexer("file", "%%%"),
+    ]).toThrowErrorMatchingInlineSnapshot(
       `"unexpected character \\"%\\" at file:1:1"`
     );
   });
@@ -284,7 +286,8 @@ describe("lexer", () => {
       ]
     `);
 
-    expect([...lexer("file", "   \n   \n   ")]).toMatchInlineSnapshot(`
+    expect([...lexer("file", "   \n   \n   ")])
+      .toMatchInlineSnapshot(`
       Array [
         Object {
           "loc": Object {
