@@ -8,12 +8,12 @@ export function* lexer(file, str) {
   let column = 1;
   let cursor = 0;
   let char = str[cursor];
-  console.log("lexer: ", char);
+  // console.log("lexer: ", char);
 
   function next() {
     cursor++;
     char = str[cursor];
-    console.log("lexer: ", char);
+    // console.log("lexer: ", char);
     column++;
   }
 
