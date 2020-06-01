@@ -19,6 +19,11 @@ Try to implement a tiny language but full dev stack.
 
 ## Stream 3
 
+- [ ] just test things as they are
+
+## Stream 4
+
+- [ ] remove logging 🤦‍♂️
 - [ ] implement AST evaluator
 - [ ] context aware errors for evaluator
 
