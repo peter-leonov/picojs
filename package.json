@@ -1,6 +1,5 @@
 {
-  "name": "jsjs",
-  "type": "module",
+  "name": "picojs",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -9,6 +8,11 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "jest": "^26.0.1"
+    "@babel/core": "^7.10.2",
+    "@babel/preset-env": "^7.10.2",
+    "@types/jest": "^25.2.3",
+    "babel-jest": "^26.0.1",
+    "jest": "^26.0.1",
+    "prettier": "^2.0.5"
   }
 }
