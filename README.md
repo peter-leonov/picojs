@@ -1,4 +1,4 @@
-This is the source code gettig slowly written during a series of streams where Olie and me are trying to re-create a full frontend development stack in pure JavaScript, including parsing some minimal subset of JavaScript, then interpreting it, making some type checks a-la TypeScript/Flow, playing with bytecode, etc.
+This is the source code gettig slowly written during a series of streams where Olie (@olzh2102) and me (@peter-leonov) are trying to re-create the full frontend development stack in pure JavaScript from scratch, including parsing some minimal subset of JavaScript, then interpreting it, making some type checks a-la TypeScript/Flow, playing with bytecode, etc.
 
 Here are the links to the videos:
 
