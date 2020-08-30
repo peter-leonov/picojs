@@ -23,17 +23,53 @@ export function parser(file, tokens) {
       next();
       return _token;
     }
+
+    return null;
+  }
+
+  function MulToken() {
+    if (token.type === "MulToken") {
+      const _token = token;
+      next();
+      return _token;
+    }
+
+    return null;
   }
 
   function BinaryExpression() {
     const head = NumericLiteral();
     if (!head) return null;
 
-    return BinaryExpressionTail(head);
+    return PlusExpression(MulExpression(head));
   }
-  function BinaryExpressionTail(left) {
-    const plus = PlusToken();
-    if (!plus) return left;
+  function PlusExpression(left) {
+    const op = PlusToken();
+    if (!op) return null;
+    const next = NumericLiteral();
+    if (!next) {
+      throw new SyntaxError(
+        `Expected token type "NumericLiteral" got "${token.type}" at ${file}:${token.loc.start.line}:${token.loc.start.column}`
+      );
+    }
+
+    // magic!!!
+    const right = MulExpression(next);
+
+    const node = {
+      type: "BinaryExpression",
+      left,
+      operatorToken: op,
+      right: right,
+      // TODO: loc
+    };
+
+    return PlusExpression(node);
+  }
+
+  function MulExpression(left) {
+    const op = MulToken();
+    if (!op) return left;
     const right = NumericLiteral();
     if (!right) {
       throw new SyntaxError(
@@ -44,12 +80,12 @@ export function parser(file, tokens) {
     const node = {
       type: "BinaryExpression",
       left,
-      operatorToken: plus,
+      operatorToken: op,
       right,
       // TODO: loc
     };
 
-    return BinaryExpressionTail(node);
+    return MulExpression(node);
   }
 
   next();

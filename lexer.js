@@ -33,6 +33,16 @@ export function* lexer(file, str) {
       };
     }
 
+    if (char === "*") {
+      const start = { line, column };
+      next();
+      const end = { line, column };
+      return {
+        type: "MulToken",
+        loc: { start, end },
+      };
+    }
+
     return null;
   }
 
