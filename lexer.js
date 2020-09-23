@@ -2,7 +2,7 @@ function isNumeric(c) {
   return "0" <= c && c <= "9";
 }
 
-export function* lexer(file, str) {
+export function lexer(file, str) {
   // little iterator ♥
   let line = 1;
   let column = 1;
@@ -39,6 +39,16 @@ export function* lexer(file, str) {
       const end = { line, column };
       return {
         type: "MulToken",
+        loc: { start, end },
+      };
+    }
+
+    if (char === "/") {
+      const start = { line, column };
+      next();
+      const end = { line, column };
+      return {
+        type: "DivToken",
         loc: { start, end },
       };
     }
@@ -113,27 +123,30 @@ export function* lexer(file, str) {
     return null;
   }
 
-  for (;;) {
-    const token = whitespace() || operator() || number() || eol();
+  function next2() {
+    for (;;) {
+      const token = whitespace() || operator() || number() || eol();
 
-    if (token) {
-      if (token === true) {
-        continue;
+      if (token) {
+        if (token === true) {
+          continue;
+        }
+
+        return token;
       }
 
-      yield token;
+      const maybeEof = eof();
+      if (maybeEof) {
+        return maybeEof;
+      }
 
-      continue;
+      throw new SyntaxError(
+        `unexpected character "${char}" at ${file}:${line}:${column}`
+      );
     }
-
-    const maybeEof = eof();
-    if (maybeEof) {
-      yield maybeEof;
-      break;
-    }
-
-    throw new SyntaxError(
-      `unexpected character "${char}" at ${file}:${line}:${column}`
-    );
   }
+
+  return {
+    next: next2,
+  };
 }
