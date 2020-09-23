@@ -22,6 +22,22 @@ export function lexer(file, str) {
     column = 1;
   }
 
+  function regexp() {
+    if (char === "/") {
+      const start = { line, column };
+      next(); // f
+      next(); // o
+      next(); // o
+      next(); // /
+      next(); // else
+      const end = { line, column };
+      return {
+        type: "RegExpToken",
+        loc: { start, end },
+      };
+    }
+  }
+
   function operator() {
     if (char === "+") {
       const start = { line, column };
@@ -123,9 +139,12 @@ export function lexer(file, str) {
     return null;
   }
 
-  function next2() {
+  function next2(mode) {
     for (;;) {
-      const token = whitespace() || operator() || number() || eol();
+      const token =
+        mode == "value"
+          ? whitespace() || regexp() || number() || eol()
+          : whitespace() || operator() || number() || eol();
 
       if (token) {
         if (token === true) {
