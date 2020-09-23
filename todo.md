@@ -28,6 +28,7 @@ Try to implement a tiny language but full dev stack.
 ## Stream 5
 
 - [x] add suport for both division and regexps
+- [x] add suport for comments
 
 ## Later
 

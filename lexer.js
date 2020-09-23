@@ -26,6 +26,9 @@ export function lexer(file, str) {
     if (char === "/") {
       const start = { line, column };
       next(); // f
+      if (char === "/") {
+        return readComment(start);
+      }
       next(); // o
       next(); // o
       next(); // /
@@ -36,6 +39,30 @@ export function lexer(file, str) {
         loc: { start, end },
       };
     }
+  }
+
+  function readComment(start) {
+    console.log("readComment");
+    for (;;) {
+      if (char === "\n") {
+        newline();
+        next();
+        break;
+      }
+
+      if (char === undefined) {
+        break;
+      }
+
+      next();
+    }
+
+    const end = { line, column };
+
+    return {
+      type: "CommentToken",
+      loc: { start, end },
+    };
   }
 
   function operator() {
@@ -62,6 +89,10 @@ export function lexer(file, str) {
     if (char === "/") {
       const start = { line, column };
       next();
+      if (char === "/") {
+        next();
+        return readComment(start);
+      }
       const end = { line, column };
       return {
         type: "DivToken",
@@ -142,7 +173,7 @@ export function lexer(file, str) {
   function next2(mode) {
     for (;;) {
       const token =
-        mode == "value"
+        mode == "expression"
           ? whitespace() || regexp() || number() || eol()
           : whitespace() || operator() || number() || eol();
 
