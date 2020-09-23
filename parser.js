@@ -2,7 +2,7 @@ export function parser(file, tokens) {
   let token = null;
 
   function next() {
-    token = tokens.next().value;
+    token = tokens.next();
     if (!token) {
       throw new TypeError("next token is undefined");
     }
@@ -37,6 +37,16 @@ export function parser(file, tokens) {
     return null;
   }
 
+  function DivToken() {
+    if (token.type === "DivToken") {
+      const _token = token;
+      next();
+      return _token;
+    }
+
+    return null;
+  }
+
   function BinaryExpression() {
     const head = NumericLiteral();
     if (!head) return null;
@@ -45,7 +55,7 @@ export function parser(file, tokens) {
   }
   function PlusExpression(left) {
     const op = PlusToken();
-    if (!op) return null;
+    if (!op) return left;
     const next = NumericLiteral();
     if (!next) {
       throw new SyntaxError(
@@ -68,7 +78,7 @@ export function parser(file, tokens) {
   }
 
   function MulExpression(left) {
-    const op = MulToken();
+    const op = MulToken() || DivToken();
     if (!op) return left;
     const right = NumericLiteral();
     if (!right) {

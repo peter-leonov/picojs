@@ -19,16 +19,21 @@ Try to implement a tiny language but full dev stack.
 
 ## Stream 3
 
-- [ ] just test things as they are
+- [x] just test things as they are
 
 ## Stream 4
+
+- [x] add operator precedence
+
+## Stream 5
+
+- [x] add suport for both division and regexps
+
+## Later
 
 - [ ] remove logging 🤦‍♂️
 - [ ] implement AST evaluator
 - [ ] context aware errors for evaluator
-
-## Later
-
 - [ ] extend lexer and parser with conditionals
 - [ ] add some syntax highlighting
 - [ ] primitive type checking
