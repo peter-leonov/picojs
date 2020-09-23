@@ -1,26 +1,41 @@
 export function parser(file, tokens) {
   let token = null;
 
-  function next() {
-    token = tokens.next();
+  function next(mode) {
+    token = tokens.next(mode);
     if (!token) {
       throw new TypeError("next token is undefined");
     }
     console.log("parser: ", token && token.type);
   }
 
-  function NumericLiteral() {
-    if (token.type === "NumericLiteral") {
+  function ValueLiteral() {
+    if (
+      token.type === "NumericLiteral" ||
+      token.type === "RegExpToken"
+    ) {
       const _token = token;
       next();
       return _token;
     }
+
+    return null;
+  }
+
+  function ValueLiteralMust() {
+    const next = ValueLiteral();
+    if (!next) {
+      throw new SyntaxError(
+        `Expected token type "NumericLiteral" or "RegExpLiteral" got "${token.type}" at ${file}:${token.loc.start.line}:${token.loc.start.column}`
+      );
+    }
+    return next;
   }
 
   function PlusToken() {
     if (token.type === "PlusToken") {
       const _token = token;
-      next();
+      next("value");
       return _token;
     }
 
@@ -30,7 +45,7 @@ export function parser(file, tokens) {
   function MulToken() {
     if (token.type === "MulToken") {
       const _token = token;
-      next();
+      next("value");
       return _token;
     }
 
@@ -40,7 +55,7 @@ export function parser(file, tokens) {
   function DivToken() {
     if (token.type === "DivToken") {
       const _token = token;
-      next();
+      next("value");
       return _token;
     }
 
@@ -48,7 +63,7 @@ export function parser(file, tokens) {
   }
 
   function BinaryExpression() {
-    const head = NumericLiteral();
+    const head = ValueLiteral();
     if (!head) return null;
 
     return PlusExpression(MulExpression(head));
@@ -56,12 +71,7 @@ export function parser(file, tokens) {
   function PlusExpression(left) {
     const op = PlusToken();
     if (!op) return left;
-    const next = NumericLiteral();
-    if (!next) {
-      throw new SyntaxError(
-        `Expected token type "NumericLiteral" got "${token.type}" at ${file}:${token.loc.start.line}:${token.loc.start.column}`
-      );
-    }
+    const next = ValueLiteralMust();
 
     // magic!!!
     const right = MulExpression(next);
@@ -80,12 +90,7 @@ export function parser(file, tokens) {
   function MulExpression(left) {
     const op = MulToken() || DivToken();
     if (!op) return left;
-    const right = NumericLiteral();
-    if (!right) {
-      throw new SyntaxError(
-        `Expected token type "NumericLiteral" got "${token.type}" at ${file}:${token.loc.start.line}:${token.loc.start.column}`
-      );
-    }
+    const right = ValueLiteralMust();
 
     const node = {
       type: "BinaryExpression",
