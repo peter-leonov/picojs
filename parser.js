@@ -3,6 +3,9 @@ export function parser(file, tokens) {
 
   function next(mode) {
     token = tokens.next(mode);
+    if (token.type === "CommentToken") {
+      return next(mode);
+    }
     if (!token) {
       throw new TypeError("next token is undefined");
     }
@@ -35,7 +38,7 @@ export function parser(file, tokens) {
   function PlusToken() {
     if (token.type === "PlusToken") {
       const _token = token;
-      next("value");
+      next("expression");
       return _token;
     }
 
@@ -45,7 +48,7 @@ export function parser(file, tokens) {
   function MulToken() {
     if (token.type === "MulToken") {
       const _token = token;
-      next("value");
+      next("expression");
       return _token;
     }
 
@@ -55,7 +58,7 @@ export function parser(file, tokens) {
   function DivToken() {
     if (token.type === "DivToken") {
       const _token = token;
-      next("value");
+      next("expression");
       return _token;
     }
 
