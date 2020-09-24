@@ -1,2 +1,2 @@
-// how to parse a slash
-/foo/ / /bar/
+// the greedy star
+1 + 3 * 4
