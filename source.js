@@ -1,1 +1,2 @@
-2 + 3 / 4 // comment
+// the greedy star
+1 + 3 * 4

@@ -4,3 +4,6 @@ Here are the links to the videos:
 
 1. [Writing a JavaScript lexer (scanner, tokeniser) in JavaScript](https://www.youtube.com/watch?v=jMun70Q4J_Y&list=PLnipdbm4t965ROHrQlxLRcSavCudqq2mz&index=1)
 2. [Writing a JavaScript parser in JavaScript](https://www.youtube.com/watch?v=iDL9bwADEoE&list=PLnipdbm4t965ROHrQlxLRcSavCudqq2mz&index=2)
+3. [Unit testing the lexer and parser](https://www.youtube.com/watch?v=qJaugNyfjEM&list=PLnipdbm4t965ROHrQlxLRcSavCudqq2mz&index=3)
+4. [Teaching operator precedence to the pico JavaScript parser](https://www.youtube.com/watch?v=qv-t5d4lkQM&list=PLnipdbm4t965ROHrQlxLRcSavCudqq2mz&index=4)
+5. [Dealing with the famous ambiguity of forward slashes in the pico JavaScript parser](https://www.youtube.com/watch?v=THjv6Y7aJZ0&list=PLnipdbm4t965ROHrQlxLRcSavCudqq2mz&index=5)
