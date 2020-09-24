@@ -1,1 +1,2 @@
-2 + 3 / 4 // comment
+// how to parse a slash
+/foo/ / /bar/
