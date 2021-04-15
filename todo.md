@@ -30,10 +30,14 @@ Try to implement a tiny language but full dev stack.
 - [x] add suport for both division and regexps
 - [x] add suport for comments
 
-## Later
+## Stream 6
 
 - [ ] remove logging 🤦‍♂️
+- [ ] do some refactoring
 - [ ] implement AST evaluator
+
+## Later
+
 - [ ] context aware errors for evaluator
 - [ ] extend lexer and parser with conditionals
 - [ ] add some syntax highlighting

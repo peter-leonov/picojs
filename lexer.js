@@ -8,12 +8,12 @@ export function lexer(file, str) {
   let column = 1;
   let cursor = 0;
   let char = str[cursor];
-  console.log("lexer: ", char);
+  // console.log("lexer: ", char);
 
   function next() {
     cursor++;
     char = str[cursor];
-    console.log("lexer: ", char);
+    // console.log("lexer: ", char);
     column++;
   }
 
@@ -36,13 +36,12 @@ export function lexer(file, str) {
       const end = { line, column };
       return {
         type: "RegExpToken",
-        loc: { start, end },
+        loc: { file, start, end },
       };
     }
   }
 
   function readComment(start) {
-    console.log("readComment");
     for (;;) {
       if (char === "\n") {
         newline();
@@ -61,7 +60,7 @@ export function lexer(file, str) {
 
     return {
       type: "CommentToken",
-      loc: { start, end },
+      loc: { file, start, end },
     };
   }
 
@@ -72,7 +71,7 @@ export function lexer(file, str) {
       const end = { line, column };
       return {
         type: "PlusToken",
-        loc: { start, end },
+        loc: { file, start, end },
       };
     }
 
@@ -82,7 +81,7 @@ export function lexer(file, str) {
       const end = { line, column };
       return {
         type: "MulToken",
-        loc: { start, end },
+        loc: { file, start, end },
       };
     }
 
@@ -96,7 +95,7 @@ export function lexer(file, str) {
       const end = { line, column };
       return {
         type: "DivToken",
-        loc: { start, end },
+        loc: { file, start, end },
       };
     }
 
@@ -116,7 +115,7 @@ export function lexer(file, str) {
       return {
         type: "NumericLiteral",
         value: Number(buffer),
-        loc: { start, end },
+        loc: { file, start, end },
       };
     }
 
@@ -163,7 +162,7 @@ export function lexer(file, str) {
       const end = start;
       return {
         type: "EndOfFileToken",
-        loc: { start, end },
+        loc: { file, start, end },
       };
     }
 

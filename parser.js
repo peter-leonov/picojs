@@ -1,15 +1,15 @@
-export function parser(file, tokens) {
+export function parser(tokens) {
   let token = null;
 
   function next(mode) {
     token = tokens.next(mode);
-    if (token.type === "CommentToken") {
-      return next(mode);
-    }
     if (!token) {
       throw new TypeError("next token is undefined");
     }
-    console.log("parser: ", token && token.type);
+    if (token.type === "CommentToken") {
+      return next(mode);
+    }
+    // console.log("parser: ", token && token.type);
   }
 
   function ValueLiteral() {
@@ -29,7 +29,7 @@ export function parser(file, tokens) {
     const next = ValueLiteral();
     if (!next) {
       throw new SyntaxError(
-        `Expected token type "NumericLiteral" or "RegExpLiteral" got "${token.type}" at ${file}:${token.loc.start.line}:${token.loc.start.column}`
+        `Expected token type "NumericLiteral" or "RegExpLiteral" got "${token.type}" at ${token.loc.file}:${token.loc.start.line}:${token.loc.start.column}`
       );
     }
     return next;
@@ -113,7 +113,7 @@ export function parser(file, tokens) {
   if (token.type != "EndOfFileToken") {
     throw new SyntaxError(
       // @ts-ignore
-      `Expected token type "EndOfFileToken" got "${token.type}" at ${file}:${token.loc.start.line}:${token.loc.start.column}`
+      `Expected token type "EndOfFileToken" got "${token.type}" at ${token.loc.file}:${token.loc.start.line}:${token.loc.start.column}`
     );
   }
 

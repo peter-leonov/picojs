@@ -5,9 +5,7 @@ import { parser } from "./parser.js";
 const file = "./source.js";
 const input = String(readFileSync(file));
 
-console.log("start");
-
-const ast = parser(file, lexer(file, input));
+const ast = parser(lexer(file, input));
 console.dir(ast, { depth: null });
 
-console.log("done");
+console.log("DONE");
