@@ -34,8 +34,9 @@ Try to implement a tiny language but full dev stack.
 
 - [x] remove logging 🤦‍♂️
 - [x] do some refactoring
-- [ ] implement AST evaluator
-- [ ] context aware errors for evaluator
+- [x] implement AST evaluator
+- [x] context aware errors for evaluator
+- [x] implement some simple exception logic
 
 ## Later
 
@@ -43,6 +44,9 @@ Try to implement a tiny language but full dev stack.
 - [ ] extend lexer and parser with conditionals
 - [ ] primitive type checking
 - [ ] bytecode emission and execution
+- [ ] implement some more complex exception propagation
 - [ ] babel-like transformations and code emition
 - [ ] VSCode language server
 - [ ] try bison in JS
+- [ ] emit WASM friendly output
+- [ ] try true exceptions

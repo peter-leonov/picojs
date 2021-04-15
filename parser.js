@@ -84,7 +84,11 @@ export function parser(tokens) {
       left,
       operatorToken: op,
       right: right,
-      // TODO: loc
+      loc: {
+        file: op.loc.file,
+        start: left.loc.start,
+        end: right.loc.end,
+      },
     };
 
     return PlusExpression(node);
@@ -100,7 +104,11 @@ export function parser(tokens) {
       left,
       operatorToken: op,
       right,
-      // TODO: loc
+      loc: {
+        file: op.loc.file,
+        start: left.loc.start,
+        end: right.loc.end,
+      },
     };
 
     return MulExpression(node);
