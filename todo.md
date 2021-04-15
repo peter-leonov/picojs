@@ -32,15 +32,17 @@ Try to implement a tiny language but full dev stack.
 
 ## Stream 6
 
-- [ ] remove logging 🤦‍♂️
-- [ ] do some refactoring
+- [x] remove logging 🤦‍♂️
+- [x] do some refactoring
 - [ ] implement AST evaluator
+- [ ] context aware errors for evaluator
 
 ## Later
 
-- [ ] context aware errors for evaluator
-- [ ] extend lexer and parser with conditionals
 - [ ] add some syntax highlighting
+- [ ] extend lexer and parser with conditionals
 - [ ] primitive type checking
 - [ ] bytecode emission and execution
+- [ ] babel-like transformations and code emition
 - [ ] VSCode language server
+- [ ] try bison in JS
