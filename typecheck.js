@@ -2,36 +2,50 @@ function unimplemented(message = "not implemented") {
   throw new Error(message);
 }
 
+function TypeNumber(loc) {
+  this.loc = loc;
+}
+
+function TypeRegExp(loc) {
+  this.loc = loc;
+}
+
 export function typecheck(root) {
   const visitor = {
-    NumericLiteral() {
-      return "number";
+    NumericLiteral({ loc }) {
+      return new TypeNumber(loc);
     },
 
-    RegExpToken() {
-      return "RegExp";
+    RegExpToken({ loc }) {
+      return new TypeRegExp(loc);
     },
 
     BinaryExpression({ left, operatorToken: op, right, loc }) {
       const leftType = visit(left);
       const rightType = visit(right);
 
+      const spanLoc = {
+        file: left.loc.file,
+        start: left.loc.start,
+        end: right.loc.end,
+      };
+
       switch (op.type) {
         case "MulToken":
         case "DivToken":
         case "PlusToken":
-          if (leftType !== "number") {
+          if (!(leftType instanceof TypeNumber)) {
             throw new Error(
-              `lefthandside argument to binary operator "${op.type}" must be of type "number"`
+              `lefthandside argument to binary operator "${op.type}" must NOT be of type "number" at ${leftType.loc.file}:${leftType.loc.start.line}:${leftType.loc.start.column}`
             );
           }
-          if (rightType !== "number") {
+          if (!(rightType instanceof TypeNumber)) {
             throw new Error(
-              `righthandside argument to binary operator "${op.type}" must be of type "number"`
+              `righthandside argument to binary operator "${op.type}" must NOT be of type "number" at ${rightType.loc.file}:${rightType.loc.start.line}:${rightType.loc.start.column}`
             );
           }
 
-          return "number";
+          return new TypeNumber(spanLoc);
 
         default:
           throw new Error(
