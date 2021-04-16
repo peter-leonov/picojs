@@ -14,7 +14,13 @@ class TypeBase {
     unreachable();
   }
   operatorPlus() {
-    return false;
+    return null;
+  }
+  operatorMul() {
+    return null;
+  }
+  operatorDiv() {
+    return null;
   }
 }
 
@@ -23,6 +29,22 @@ class TypeNumber extends TypeBase {
     return "number";
   }
   operatorPlus(right) {
+    if (right instanceof TypeNumber) {
+      return TypeNumber;
+    }
+
+    return null;
+  }
+
+  operatorMul(right) {
+    if (right instanceof TypeNumber) {
+      return TypeNumber;
+    }
+
+    return null;
+  }
+
+  operatorDiv(right) {
     if (right instanceof TypeNumber) {
       return TypeNumber;
     }
@@ -58,7 +80,7 @@ export function typecheck(root) {
       };
 
       switch (op.type) {
-        case "PlusToken":
+        case "PlusToken": {
           const newType = leftType.operatorPlus(rightType);
           if (!newType) {
             throw new Error(
@@ -66,10 +88,27 @@ export function typecheck(root) {
             );
           }
           return new newType(spanLoc);
+        }
 
-        case "MulToken":
-        case "DivToken":
-          unimplemented();
+        case "MulToken": {
+          const newType = leftType.operatorMul(rightType);
+          if (!newType) {
+            throw new Error(
+              `Operator '*' cannot be applied to types '${leftType.name()}' and '${rightType.name()}'.`
+            );
+          }
+          return new newType(spanLoc);
+        }
+
+        case "DivToken": {
+          const newType = leftType.operatorDiv(rightType);
+          if (!newType) {
+            throw new Error(
+              `Operator '/' cannot be applied to types '${leftType.name()}' and '${rightType.name()}'.`
+            );
+          }
+          return new newType(spanLoc);
+        }
 
         default:
           throw new Error(
