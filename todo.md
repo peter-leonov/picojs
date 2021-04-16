@@ -38,11 +38,14 @@ Try to implement a tiny language but full dev stack.
 - [x] context aware errors for evaluator
 - [x] implement some simple exception logic
 
+## Stream 7
+
+- [ ] primitive type checking
+
 ## Later
 
 - [ ] add some syntax highlighting
 - [ ] extend lexer and parser with conditionals
-- [ ] primitive type checking
 - [ ] bytecode emission and execution
 - [ ] implement some more complex exception propagation
 - [ ] babel-like transformations and code emition

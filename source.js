@@ -1,2 +1,1 @@
-// the greedy star
-1 + 8 / 4
+1 + /foo/ * 1
