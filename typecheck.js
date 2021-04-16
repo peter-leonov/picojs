@@ -6,6 +6,10 @@ function unreachable() {
   throw new Error("unreachable!");
 }
 
+function locToStart(loc) {
+  return `${loc.file}:${loc.start.line}:${loc.start.column}`;
+}
+
 class TypeBase {
   constructor(loc) {
     this.loc = loc;
@@ -21,6 +25,22 @@ class TypeBase {
   }
   operatorDiv() {
     return null;
+  }
+}
+
+class TypeAny extends TypeBase {
+  name() {
+    return "any";
+  }
+
+  operatorPlus() {
+    return TypeAny;
+  }
+  operatorMul() {
+    return TypeAny;
+  }
+  operatorDiv() {
+    return TypeAny;
   }
 }
 
@@ -60,6 +80,8 @@ class TypeRegExp extends TypeBase {
 }
 
 export function typecheck(root) {
+  const errors = [];
+
   const visitor = {
     NumericLiteral({ loc }) {
       return new TypeNumber(loc);
@@ -83,9 +105,12 @@ export function typecheck(root) {
         case "PlusToken": {
           const newType = leftType.operatorPlus(rightType);
           if (!newType) {
-            throw new Error(
-              `Operator '+' cannot be applied to types '${leftType.name()}' and '${rightType.name()}'.`
+            errors.push(
+              `Operator '+' cannot be applied to types '${leftType.name()}' and '${rightType.name()}' at ${locToStart(
+                spanLoc
+              )}.`
             );
+            return new TypeAny(spanLoc);
           }
           return new newType(spanLoc);
         }
@@ -93,26 +118,30 @@ export function typecheck(root) {
         case "MulToken": {
           const newType = leftType.operatorMul(rightType);
           if (!newType) {
-            throw new Error(
-              `Operator '*' cannot be applied to types '${leftType.name()}' and '${rightType.name()}'.`
+            errors.push(
+              `Operator '*' cannot be applied to types '${leftType.name()}' and '${rightType.name()}' at ${locToStart(
+                spanLoc
+              )}.`
             );
           }
-          return new newType(spanLoc);
+          return new TypeAny(spanLoc);
         }
 
         case "DivToken": {
           const newType = leftType.operatorDiv(rightType);
           if (!newType) {
-            throw new Error(
-              `Operator '/' cannot be applied to types '${leftType.name()}' and '${rightType.name()}'.`
+            errors.push(
+              `Operator '/' cannot be applied to types '${leftType.name()}' and '${rightType.name()}' at ${locToStart(
+                spanLoc
+              )}.`
             );
           }
-          return new newType(spanLoc);
+          return new TypeAny(spanLoc);
         }
 
         default:
           throw new Error(
-            `unknown operator "${op.type}" at ${op.loc.file}:${op.loc.start.line}:${op.loc.start.column}`
+            `unknown operator "${op.type}" at ${locToStart(op.loc)}`
           );
       }
     },
@@ -122,12 +151,14 @@ export function typecheck(root) {
     const handler = visitor[node.type];
     if (!handler) {
       throw new Error(
-        `unknown node type "${node.type}" at ${node.loc.file}:${node.loc.start.line}:${node.loc.start.column}`
+        `unknown node type "${node.type}" at ${locToStart(node.loc)}`
       );
     }
 
     return handler(node);
   }
 
-  return visit(root);
+  visit(root);
+
+  return errors;
 }

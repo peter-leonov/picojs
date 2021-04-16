@@ -9,6 +9,10 @@ export function evaluate(root) {
       return value;
     },
 
+    RegExpToken() {
+      return /unimplemented/;
+    },
+
     BinaryExpression({ left, operatorToken: op, right, loc }) {
       const leftValue = visit(left);
       const rightValue = visit(right);
