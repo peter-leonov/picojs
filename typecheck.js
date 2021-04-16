@@ -2,12 +2,39 @@ function unimplemented(message = "not implemented") {
   throw new Error(message);
 }
 
-function TypeNumber(loc) {
-  this.loc = loc;
+function unreachable() {
+  throw new Error("unreachable!");
 }
 
-function TypeRegExp(loc) {
-  this.loc = loc;
+class TypeBase {
+  constructor(loc) {
+    this.loc = loc;
+  }
+  name() {
+    unreachable();
+  }
+  operatorPlus() {
+    return false;
+  }
+}
+
+class TypeNumber extends TypeBase {
+  name() {
+    return "number";
+  }
+  operatorPlus(right) {
+    if (right instanceof TypeNumber) {
+      return TypeNumber;
+    }
+
+    return null;
+  }
+}
+
+class TypeRegExp extends TypeBase {
+  name() {
+    return "RegExp";
+  }
 }
 
 export function typecheck(root) {
@@ -31,21 +58,18 @@ export function typecheck(root) {
       };
 
       switch (op.type) {
+        case "PlusToken":
+          const newType = leftType.operatorPlus(rightType);
+          if (!newType) {
+            throw new Error(
+              `Operator '+' cannot be applied to types '${leftType.name()}' and '${rightType.name()}'.`
+            );
+          }
+          return new newType(spanLoc);
+
         case "MulToken":
         case "DivToken":
-        case "PlusToken":
-          if (!(leftType instanceof TypeNumber)) {
-            throw new Error(
-              `lefthandside argument to binary operator "${op.type}" must NOT be of type "number" at ${leftType.loc.file}:${leftType.loc.start.line}:${leftType.loc.start.column}`
-            );
-          }
-          if (!(rightType instanceof TypeNumber)) {
-            throw new Error(
-              `righthandside argument to binary operator "${op.type}" must NOT be of type "number" at ${rightType.loc.file}:${rightType.loc.start.line}:${rightType.loc.start.column}`
-            );
-          }
-
-          return new TypeNumber(spanLoc);
+          unimplemented();
 
         default:
           throw new Error(
