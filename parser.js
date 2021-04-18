@@ -1,11 +1,13 @@
 export function parser(tokens) {
   let token = null;
+  const rawTokens = [];
 
   function next(mode) {
     token = tokens.next(mode);
     if (!token) {
       throw new TypeError("next token is undefined");
     }
+    rawTokens.push(token);
     if (token.type === "CommentToken") {
       return next(mode);
     }
@@ -115,7 +117,7 @@ export function parser(tokens) {
   }
 
   next();
-  const program = BinaryExpression();
+  const ast = BinaryExpression();
 
   // @ts-ignore
   if (token.type != "EndOfFileToken") {
@@ -125,5 +127,5 @@ export function parser(tokens) {
     );
   }
 
-  return program;
+  return { ast, tokens: rawTokens };
 }

@@ -44,7 +44,7 @@ Try to implement a tiny language but full dev stack.
 
 ## Stream 8
 
-- [ ] finish the refactoring
+- [x] finish the refactoring
 - [ ] add some syntax highlighting
 
 ## Later

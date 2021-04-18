@@ -10,6 +10,10 @@ export function lexer(file, str) {
   let char = str[cursor];
   // console.log("lexer: ", char);
 
+  function position() {
+    return { cursor, line, column };
+  }
+
   function next() {
     cursor++;
     char = str[cursor];
@@ -24,7 +28,7 @@ export function lexer(file, str) {
 
   function regexp() {
     if (char === "/") {
-      const start = { line, column };
+      const start = position();
       next();
       if (char === "/") {
         next();
@@ -38,7 +42,7 @@ export function lexer(file, str) {
 
       next(); // last /
 
-      const end = { line, column };
+      const end = position();
       return {
         type: "RegExpToken",
         loc: { file, start, end },
@@ -61,7 +65,7 @@ export function lexer(file, str) {
       next();
     }
 
-    const end = { line, column };
+    const end = position();
 
     return {
       type: "CommentToken",
@@ -71,9 +75,9 @@ export function lexer(file, str) {
 
   function operator() {
     if (char === "+") {
-      const start = { line, column };
+      const start = position();
       next();
-      const end = { line, column };
+      const end = position();
       return {
         type: "PlusToken",
         loc: { file, start, end },
@@ -81,9 +85,9 @@ export function lexer(file, str) {
     }
 
     if (char === "*") {
-      const start = { line, column };
+      const start = position();
       next();
-      const end = { line, column };
+      const end = position();
       return {
         type: "MulToken",
         loc: { file, start, end },
@@ -91,13 +95,13 @@ export function lexer(file, str) {
     }
 
     if (char === "/") {
-      const start = { line, column };
+      const start = position();
       next();
       if (char === "/") {
         next();
         return readComment(start);
       }
-      const end = { line, column };
+      const end = position();
       return {
         type: "DivToken",
         loc: { file, start, end },
@@ -109,14 +113,14 @@ export function lexer(file, str) {
 
   function number() {
     let buffer = "";
-    const start = { line, column };
+    const start = position();
     while (isNumeric(char)) {
       buffer += char;
       next();
     }
 
     if (buffer.length >= 1) {
-      const end = { line, column };
+      const end = position();
       return {
         type: "NumericLiteral",
         value: Number(buffer),
@@ -163,7 +167,7 @@ export function lexer(file, str) {
 
   function eof() {
     if (char === undefined) {
-      const start = { line, column };
+      const start = position();
       const end = start;
       return {
         type: "EndOfFileToken",

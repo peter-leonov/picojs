@@ -3,19 +3,22 @@ import { lexer } from "./lexer.js";
 import { parser } from "./parser.js";
 import { evaluate, Exception } from "./evaluate.js";
 import { typecheck } from "./typecheck.js";
+import { highlight } from "./highlighter.js";
 
 const file = "./source.js";
-const input = String(readFileSync(file));
+const content = String(readFileSync(file));
 
-const ast = parser(lexer(file, input));
+const { ast, tokens } = parser(lexer(file, content));
 
-// const typeErrors = typecheck(ast);
-// if (typeErrors.length) {
-//   console.log("TYPE ERRORS:");
-//   for (const error of typeErrors) {
-//     console.log(`  ${error}`);
-//   }
-// }
+console.log(highlight(content, tokens));
+
+const typeErrors = typecheck(ast);
+if (typeErrors.length) {
+  console.log("TYPE ERRORS:");
+  for (const error of typeErrors) {
+    console.log(`  ${error}`);
+  }
+}
 
 const result = evaluate(ast);
 if (result instanceof Exception) {
