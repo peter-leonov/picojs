@@ -40,11 +40,15 @@ Try to implement a tiny language but full dev stack.
 
 ## Stream 7
 
-- [ ] primitive type checking
+- [x] primitive type checking
+
+## Stream 8
+
+- [ ] finish the refactoring
+- [ ] add some syntax highlighting
 
 ## Later
 
-- [ ] add some syntax highlighting
 - [ ] extend lexer and parser with conditionals
 - [ ] bytecode emission and execution
 - [ ] implement some more complex exception propagation

@@ -9,13 +9,13 @@ const input = String(readFileSync(file));
 
 const ast = parser(lexer(file, input));
 
-const typeErrors = typecheck(ast);
-if (typeErrors.length) {
-  console.log("TYPE ERRORS:");
-  for (const error of typeErrors) {
-    console.log(`  ${error}`);
-  }
-}
+// const typeErrors = typecheck(ast);
+// if (typeErrors.length) {
+//   console.log("TYPE ERRORS:");
+//   for (const error of typeErrors) {
+//     console.log(`  ${error}`);
+//   }
+// }
 
 const result = evaluate(ast);
 if (result instanceof Exception) {

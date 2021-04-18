@@ -25,14 +25,19 @@ export function lexer(file, str) {
   function regexp() {
     if (char === "/") {
       const start = { line, column };
-      next(); // f
+      next();
       if (char === "/") {
+        next();
         return readComment(start);
       }
-      next(); // o
-      next(); // o
-      next(); // /
-      next(); // else
+
+      next();
+      while (char !== "/") {
+        next();
+      }
+
+      next(); // last /
+
       const end = { line, column };
       return {
         type: "RegExpToken",
