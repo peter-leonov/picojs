@@ -1,3 +1,2 @@
 // comment 1
-1 / /foo/ + 0
-
+1 / /foo/

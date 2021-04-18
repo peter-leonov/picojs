@@ -136,6 +136,7 @@ export function lexer(file, str) {
   }
 
   function whitespace() {
+    const start = position();
     if (isWhitespace(char)) {
       next();
     } else {
@@ -145,24 +146,30 @@ export function lexer(file, str) {
     while (isWhitespace(char)) {
       next();
     }
+    const end = position();
 
-    return true;
+    return {
+      type: "Whitespace",
+      loc: { file, start, end },
+    };
   }
 
   function eol() {
-    if (char === "\n") {
-      next();
-      newline();
-    } else {
+    const start = position();
+
+    if (char !== "\n") {
       return null;
     }
 
-    while (char === "\n") {
-      next();
-      newline();
-    }
+    next();
+    newline();
 
-    return true;
+    const end = position();
+
+    return {
+      type: "Newline",
+      loc: { file, start, end },
+    };
   }
 
   function eof() {
@@ -186,10 +193,6 @@ export function lexer(file, str) {
           : whitespace() || operator() || number() || eol();
 
       if (token) {
-        if (token === true) {
-          continue;
-        }
-
         return token;
       }
 

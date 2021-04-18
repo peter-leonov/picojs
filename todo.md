@@ -57,3 +57,4 @@ Try to implement a tiny language but full dev stack.
 - [ ] try bison in JS
 - [ ] emit WASM friendly output
 - [ ] try true exceptions
+- [ ] maybe something like core rewrite as in prettier

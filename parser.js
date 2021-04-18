@@ -8,7 +8,11 @@ export function parser(tokens) {
       throw new TypeError("next token is undefined");
     }
     rawTokens.push(token);
-    if (token.type === "CommentToken") {
+    if (
+      token.type === "CommentToken" ||
+      token.type === "Whitespace" ||
+      token.type === "Newline"
+    ) {
       return next(mode);
     }
     // console.log("parser: ", token && token.type);
