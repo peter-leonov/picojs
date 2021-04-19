@@ -45,10 +45,11 @@ Try to implement a tiny language but full dev stack.
 ## Stream 8
 
 - [x] finish the refactoring
-- [ ] add some syntax highlighting
+- [x] add some syntax highlighting
 
 ## Later
 
+- [ ] syntax highlight the error messages
 - [ ] extend lexer and parser with conditionals
 - [ ] bytecode emission and execution
 - [ ] implement some more complex exception propagation

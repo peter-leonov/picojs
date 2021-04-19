@@ -7,3 +7,4 @@ Here are the links to the videos:
 3. [Unit testing the lexer and parser](https://www.youtube.com/watch?v=qJaugNyfjEM&list=PLnipdbm4t965ROHrQlxLRcSavCudqq2mz&index=3)
 4. [Teaching operator precedence to the pico JavaScript parser](https://www.youtube.com/watch?v=qv-t5d4lkQM&list=PLnipdbm4t965ROHrQlxLRcSavCudqq2mz&index=4)
 5. [Dealing with the famous ambiguity of forward slashes in the pico JavaScript parser](https://www.youtube.com/watch?v=THjv6Y7aJZ0&list=PLnipdbm4t965ROHrQlxLRcSavCudqq2mz&index=5)
+6. [Evaluating the AST to a concrete value](https://www.youtube.com/watch?v=8somwjHNJOk&list=PLnipdbm4t965ROHrQlxLRcSavCudqq2mz&index=6)
