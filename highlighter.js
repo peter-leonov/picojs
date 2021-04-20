@@ -4,6 +4,7 @@ const COLORS = {
   PlusToken: "\x1b[31m",
   RegExpToken: "\x1b[33m",
   String: "\x1b[32m",
+  Id: "\x1b[34m",
   NumericLiteral: "\x1b[36m",
   CommentToken: "\x1b[37m\x1b[2m",
   Semicolon: "\x1b[37m\x1b[2m",

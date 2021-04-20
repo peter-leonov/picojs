@@ -20,6 +20,7 @@ export function parser(tokens) {
 
   function ValueLiteral() {
     if (
+      token.type === "Id" ||
       token.type === "NumericLiteral" ||
       token.type === "String" ||
       token.type === "RegExpToken"

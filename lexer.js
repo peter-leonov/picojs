@@ -2,6 +2,10 @@ function isNumeric(c) {
   return "0" <= c && c <= "9";
 }
 
+function isAlpha(c) {
+  return ("a" <= c && c <= "z") || ("A" <= c && c <= "Z");
+}
+
 export function lexer(file, str) {
   // little iterator ♥
   let line = 1;
@@ -153,6 +157,27 @@ export function lexer(file, str) {
     return null;
   }
 
+  function id() {
+    let buffer = "";
+    if (!isAlpha(char)) return null;
+    const start = position();
+    next();
+
+    while (isNumeric(char) || isAlpha(char)) {
+      buffer += char;
+      next();
+    }
+
+    const end = position();
+    return {
+      type: "Id",
+      value: buffer,
+      loc: { file, start, end },
+    };
+
+    return null;
+  }
+
   function isWhitespace(c) {
     return c === " " || c === "\t";
   }
@@ -221,7 +246,7 @@ export function lexer(file, str) {
 
   function next2(mode) {
     function expression() {
-      return number() || string() || regexp();
+      return id() || number() || string() || regexp();
     }
 
     const token =
