@@ -157,6 +157,19 @@ export function lexer(file, str) {
     return c === " " || c === "\t";
   }
 
+  function semicolon() {
+    if (char !== ";") return null;
+    const start = position();
+    next();
+
+    const end = position();
+
+    return {
+      type: "Semicolon",
+      loc: { file, start, end },
+    };
+  }
+
   function whitespace() {
     const start = position();
     if (!isWhitespace(char)) {
@@ -213,6 +226,7 @@ export function lexer(file, str) {
 
     const token =
       whitespace() ||
+      semicolon() ||
       (mode === "expression" ? expression() : operator()) ||
       eol();
 

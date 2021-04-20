@@ -9,6 +9,7 @@ const file = "./source.js";
 const content = String(readFileSync(file));
 
 const { ast, tokens } = parser(lexer(file, content));
+console.dir(ast, { depth: null });
 
 console.log(highlight(content, tokens));
 

@@ -42,6 +42,28 @@ export function parser(tokens) {
     return next;
   }
 
+  function take(type, mode) {
+    if (token.type === type) {
+      const _token = token;
+      next(mode);
+      return _token;
+    }
+
+    throw new SyntaxError(
+      `Expected token type "${type}" got "${token.type}" at ${token.loc.file}:${token.loc.start.line}:${token.loc.start.column}`
+    );
+  }
+
+  function maybeTake(type, mode) {
+    if (token.type === type) {
+      const _token = token;
+      next(mode);
+      return _token;
+    }
+
+    return null;
+  }
+
   function PlusToken() {
     if (token.type === "PlusToken") {
       const _token = token;
@@ -72,6 +94,9 @@ export function parser(tokens) {
     return null;
   }
 
+  function Expression() {
+    return BinaryExpression();
+  }
   function BinaryExpression() {
     const head = ValueLiteral();
     if (!head) return null;
@@ -121,8 +146,25 @@ export function parser(tokens) {
     return MulExpression(node);
   }
 
+  function Statement() {
+    const expr = Expression();
+    if (!expr) return null;
+    take("Semicolon", "expression");
+    return expr;
+  }
+
+  function Statements() {
+    const stmts = [];
+    for (;;) {
+      const stmt = Statement();
+      if (!stmt) break;
+      stmts.push(stmt);
+    }
+    return stmts;
+  }
+
   next("expression");
-  const ast = BinaryExpression();
+  const ast = Statements();
 
   // @ts-ignore
   if (token.type != "EndOfFileToken") {

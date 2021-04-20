@@ -6,6 +6,7 @@ const COLORS = {
   String: "\x1b[32m",
   NumericLiteral: "\x1b[36m",
   CommentToken: "\x1b[37m\x1b[2m",
+  Semicolon: "\x1b[37m\x1b[2m",
 };
 
 export function highlight(content, tokens) {
