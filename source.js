@@ -1,3 +1,1 @@
-/hightlight/ / "me";
-foo * 900;
-// if (you) can()
+if (1) if (2) foo;

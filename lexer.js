@@ -157,10 +157,13 @@ export function lexer(file, str) {
     return null;
   }
 
+  const keywords = new Set(["if"]);
+
   function id() {
     let buffer = "";
     if (!isAlpha(char)) return null;
     const start = position();
+    buffer += char;
     next();
 
     while (isNumeric(char) || isAlpha(char)) {
@@ -169,6 +172,14 @@ export function lexer(file, str) {
     }
 
     const end = position();
+
+    if (keywords.has(buffer)) {
+      return {
+        type: "If",
+        loc: { file, start, end },
+      };
+    }
+
     return {
       type: "Id",
       value: buffer,
@@ -193,6 +204,30 @@ export function lexer(file, str) {
       type: "Semicolon",
       loc: { file, start, end },
     };
+  }
+
+  function parents() {
+    if (char === "(") {
+      const start = position();
+      next();
+      const end = position();
+      return {
+        type: "OpenParent",
+        loc: { file, start, end },
+      };
+    }
+
+    if (char === ")") {
+      const start = position();
+      next();
+      const end = position();
+      return {
+        type: "CloseParent",
+        loc: { file, start, end },
+      };
+    }
+
+    return null;
   }
 
   function whitespace() {
@@ -245,14 +280,15 @@ export function lexer(file, str) {
   }
 
   function next2(mode) {
-    function expression() {
+    function value() {
       return id() || number() || string() || regexp();
     }
 
     const token =
       whitespace() ||
       semicolon() ||
-      (mode === "expression" ? expression() : operator()) ||
+      parents() ||
+      (mode === "expression" ? value() : operator()) ||
       eol();
 
     if (token) {

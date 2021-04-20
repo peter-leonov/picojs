@@ -18,6 +18,13 @@ export function parser(tokens) {
     // console.log("parser: ", token && token.type);
   }
 
+  function panic(message) {
+    throw new SyntaxError(
+      // @ts-ignore
+      `${message} at ${token.loc.file}:${token.loc.start.line}:${token.loc.start.column}`
+    );
+  }
+
   function ValueLiteral() {
     if (
       token.type === "Id" ||
@@ -36,8 +43,8 @@ export function parser(tokens) {
   function ValueLiteralMust() {
     const next = ValueLiteral();
     if (!next) {
-      throw new SyntaxError(
-        `Expected token type "NumericLiteral" or "RegExpLiteral" got "${token.type}" at ${token.loc.file}:${token.loc.start.line}:${token.loc.start.column}`
+      panic(
+        `Expected token type "NumericLiteral" or "RegExpLiteral" got "${token.type}"`
       );
     }
     return next;
@@ -50,9 +57,7 @@ export function parser(tokens) {
       return _token;
     }
 
-    throw new SyntaxError(
-      `Expected token type "${type}" got "${token.type}" at ${token.loc.file}:${token.loc.start.line}:${token.loc.start.column}`
-    );
+    panic(`Expected token type "${type}" got "${token.type}"`);
   }
 
   function maybeTake(type, mode) {
@@ -147,11 +152,42 @@ export function parser(tokens) {
     return MulExpression(node);
   }
 
+  function IfStatement() {
+    const kw = maybeTake("If");
+    if (!kw) return null;
+    take("OpenParent", "expression");
+    const condition = Expression();
+    if (!condition) {
+      panic("Expected an Expression");
+    }
+    take("CloseParent", "expression");
+    const then = Statement();
+
+    return {
+      type: "If",
+      condition,
+      then,
+      loc: {
+        file: kw.loc.file,
+        start: kw.loc.start,
+        end: then.loc.end,
+      },
+    };
+  }
+
   function Statement() {
     const expr = Expression();
-    if (!expr) return null;
-    take("Semicolon", "expression");
-    return expr;
+    if (expr) {
+      take("Semicolon", "expression");
+      return expr;
+    }
+
+    const ifstmt = IfStatement();
+    if (ifstmt) {
+      return ifstmt;
+    }
+
+    return null;
   }
 
   function Statements() {
@@ -169,10 +205,7 @@ export function parser(tokens) {
 
   // @ts-ignore
   if (token.type != "EndOfFileToken") {
-    throw new SyntaxError(
-      // @ts-ignore
-      `Expected token type "EndOfFileToken" got "${token.type}" at ${token.loc.file}:${token.loc.start.line}:${token.loc.start.column}`
-    );
+    panic(`Expected token type "EndOfFileToken" got "${token.type}"`);
   }
 
   return { ast, tokens: rawTokens };
