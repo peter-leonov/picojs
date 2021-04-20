@@ -1,1 +1,2 @@
-if (1) if (2) foo;
+/hightlight/ / "me";
+if (you) can;

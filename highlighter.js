@@ -8,6 +8,10 @@ const COLORS = {
   NumericLiteral: "\x1b[36m",
   CommentToken: "\x1b[37m\x1b[2m",
   Semicolon: "\x1b[37m\x1b[2m",
+  OpenParent: "\x1b[37m\x1b[2m",
+  CloseParent: "\x1b[37m\x1b[2m",
+  If: "\x1b[31m\x1b[2m",
+  Else: "\x1b[31m\x1b[2m",
 };
 
 export function highlight(content, tokens) {

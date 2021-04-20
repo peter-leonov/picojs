@@ -152,38 +152,62 @@ export function parser(tokens) {
     return MulExpression(node);
   }
 
-  function IfStatement() {
+  function IfExpression() {
     const kw = maybeTake("If");
     if (!kw) return null;
     take("OpenParent", "expression");
     const condition = Expression();
     if (!condition) {
-      panic("Expected an Expression");
+      panic("Expected an Expression for condition");
     }
     take("CloseParent", "expression");
     const then = Statement();
+    if (!then) {
+      panic("Expected an Expression for then");
+    }
+
+    let els = null;
+    const elseKw = maybeTake("Else", "expression");
+    if (elseKw) {
+      els = Statement();
+      if (!els) {
+        panic("Expected an Expression for else");
+      }
+    }
+
+    const end = els ? els.loc.end : then.loc.end;
 
     return {
       type: "If",
       condition,
       then,
+      else: els,
       loc: {
         file: kw.loc.file,
         start: kw.loc.start,
-        end: then.loc.end,
+        end,
       },
     };
   }
 
   function Statement() {
-    const expr = Expression();
-    if (expr) {
-      take("Semicolon", "expression");
-      return expr;
+    const expression = Expression();
+    if (expression) {
+      const sc = take("Semicolon", "expression");
+      return {
+        type: "Statement",
+        expression,
+        loc: {
+          file: expression.loc.file,
+          start: expression.loc.start,
+          end: sc.loc.end,
+        },
+      };
     }
 
-    const ifstmt = IfStatement();
+    const ifstmt = IfExpression();
     if (ifstmt) {
+      maybeTake("Semicolon", "expression");
       return ifstmt;
     }
 

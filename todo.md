@@ -51,6 +51,7 @@ Try to implement a tiny language but full dev stack.
 
 - [ ] extend lexer and parser with conditionals etc
 - [ ] implement closures
+- [ ] maybe switch lexing mode from "expression" to "operator"
 - [ ] syntax highlight the error messages
 - [ ] bytecode emission and execution
 - [ ] implement some more complex exception propagation

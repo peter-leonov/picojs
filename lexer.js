@@ -157,7 +157,10 @@ export function lexer(file, str) {
     return null;
   }
 
-  const keywords = new Set(["if"]);
+  const keywords = {
+    if: "If",
+    else: "Else",
+  };
 
   function id() {
     let buffer = "";
@@ -173,9 +176,10 @@ export function lexer(file, str) {
 
     const end = position();
 
-    if (keywords.has(buffer)) {
+    const type = keywords[buffer];
+    if (type) {
       return {
-        type: "If",
+        type,
         loc: { file, start, end },
       };
     }
@@ -281,11 +285,12 @@ export function lexer(file, str) {
 
   function next2(mode) {
     function value() {
-      return id() || number() || string() || regexp();
+      return number() || string() || regexp();
     }
 
     const token =
       whitespace() ||
+      id() ||
       semicolon() ||
       parents() ||
       (mode === "expression" ? value() : operator()) ||
