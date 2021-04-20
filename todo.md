@@ -49,8 +49,9 @@ Try to implement a tiny language but full dev stack.
 
 ## Later
 
+- [ ] extend lexer and parser with conditionals etc
+- [ ] implement closures
 - [ ] syntax highlight the error messages
-- [ ] extend lexer and parser with conditionals
 - [ ] bytecode emission and execution
 - [ ] implement some more complex exception propagation
 - [ ] babel-like transformations and code emition

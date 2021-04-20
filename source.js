@@ -1,2 +1,2 @@
-// comment 1
-1 / /foo/
+/hightlight/ / "me"
+// if (you) can()

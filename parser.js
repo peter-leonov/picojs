@@ -21,6 +21,7 @@ export function parser(tokens) {
   function ValueLiteral() {
     if (
       token.type === "NumericLiteral" ||
+      token.type === "String" ||
       token.type === "RegExpToken"
     ) {
       const _token = token;
@@ -120,7 +121,7 @@ export function parser(tokens) {
     return MulExpression(node);
   }
 
-  next();
+  next("expression");
   const ast = BinaryExpression();
 
   // @ts-ignore

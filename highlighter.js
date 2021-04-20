@@ -3,6 +3,7 @@ const COLORS = {
   MulToken: "\x1b[31m",
   PlusToken: "\x1b[31m",
   RegExpToken: "\x1b[33m",
+  String: "\x1b[32m",
   NumericLiteral: "\x1b[36m",
   CommentToken: "\x1b[37m\x1b[2m",
 };

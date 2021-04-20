@@ -26,6 +26,28 @@ export function lexer(file, str) {
     column = 1;
   }
 
+  function stringOfType(delimiter) {
+    if (char !== delimiter) return null;
+
+    const start = position();
+    next();
+    while (char !== delimiter) {
+      next();
+    }
+
+    next(); // last delimiter
+
+    const end = position();
+    return {
+      type: "String",
+      loc: { file, start, end },
+    };
+  }
+
+  function string() {
+    return stringOfType('"') || stringOfType("'");
+  }
+
   function regexp() {
     if (char === "/") {
       const start = position();
@@ -137,11 +159,10 @@ export function lexer(file, str) {
 
   function whitespace() {
     const start = position();
-    if (isWhitespace(char)) {
-      next();
-    } else {
+    if (!isWhitespace(char)) {
       return null;
     }
+    next();
 
     while (isWhitespace(char)) {
       next();
@@ -186,25 +207,27 @@ export function lexer(file, str) {
   }
 
   function next2(mode) {
-    for (;;) {
-      const token =
-        mode == "expression"
-          ? whitespace() || regexp() || number() || eol()
-          : whitespace() || operator() || number() || eol();
-
-      if (token) {
-        return token;
-      }
-
-      const maybeEof = eof();
-      if (maybeEof) {
-        return maybeEof;
-      }
-
-      throw new SyntaxError(
-        `unexpected character "${char}" at ${file}:${line}:${column}`
-      );
+    function expression() {
+      return number() || string() || regexp();
     }
+
+    const token =
+      whitespace() ||
+      (mode === "expression" ? expression() : operator()) ||
+      eol();
+
+    if (token) {
+      return token;
+    }
+
+    const maybeEof = eof();
+    if (maybeEof) {
+      return maybeEof;
+    }
+
+    throw new SyntaxError(
+      `unexpected character "${char}" at ${file}:${line}:${column}`
+    );
   }
 
   return {
