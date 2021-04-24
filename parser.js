@@ -25,9 +25,46 @@ export function parser(tokens) {
     );
   }
 
-  function ValueLiteral() {
+  function FunctionCall(name) {
+    const open = maybeTake("OpenParent", "expression");
+    if (!open) return name;
+
+    const args = [];
+
+    // head
+    const expr = Expression();
+    if (expr) {
+      args.push(expr);
+      for (;;) {
+        const colon = maybeTake("Colon", "expression");
+        if (!colon) break;
+        const expr = Expression();
+        args.push(expr);
+      }
+    }
+
+    const close = take("CloseParent");
+
+    return {
+      type: "FunctionCall",
+      name,
+      arguments: args,
+      loc: {
+        file: open.loc.file,
+        start: open.loc.start,
+        end: close.loc.start,
+      },
+    };
+  }
+
+  function ExpressionMember() {
+    if (token.type === "Id") {
+      const _token = token;
+      next();
+      return FunctionCall(_token);
+    }
+
     if (
-      token.type === "Id" ||
       token.type === "NumericLiteral" ||
       token.type === "String" ||
       token.type === "RegExpToken"
@@ -40,12 +77,10 @@ export function parser(tokens) {
     return null;
   }
 
-  function ValueLiteralMust() {
-    const next = ValueLiteral();
+  function ExpressionMemberMust() {
+    const next = ExpressionMember();
     if (!next) {
-      panic(
-        `Expected token type "NumericLiteral" or "RegExpLiteral" got "${token.type}"`
-      );
+      panic(`Expected ExpressionMember got "${token.type}"`);
     }
     return next;
   }
@@ -104,7 +139,7 @@ export function parser(tokens) {
     return BinaryExpression();
   }
   function BinaryExpression() {
-    const head = ValueLiteral();
+    const head = ExpressionMember();
     if (!head) return null;
 
     return PlusExpression(MulExpression(head));
@@ -112,7 +147,7 @@ export function parser(tokens) {
   function PlusExpression(left) {
     const op = PlusToken();
     if (!op) return left;
-    const next = ValueLiteralMust();
+    const next = ExpressionMemberMust();
 
     // magic!!!
     const right = MulExpression(next);
@@ -135,7 +170,7 @@ export function parser(tokens) {
   function MulExpression(left) {
     const op = MulToken() || DivToken();
     if (!op) return left;
-    const right = ValueLiteralMust();
+    const right = ExpressionMemberMust();
 
     const node = {
       type: "BinaryExpression",

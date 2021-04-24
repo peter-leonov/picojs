@@ -47,10 +47,13 @@ Try to implement a tiny language but full dev stack.
 - [x] finish the refactoring
 - [x] add some syntax highlighting
 
+## Stream 9
+
+- [x] extend lexer and parser with conditionals etc
+
 ## Later
 
-- [ ] extend lexer and parser with conditionals etc
-- [ ] implement closures
+- [ ] implement functions and then closures
 - [ ] macroses
 - [ ] maybe switch lexing mode from "expression" to "operator"
 - [ ] syntax highlight the error messages
@@ -61,4 +64,4 @@ Try to implement a tiny language but full dev stack.
 - [ ] try bison in JS
 - [ ] emit WASM friendly output
 - [ ] try true exceptions
-- [ ] maybe something like core rewrite as in prettier
+- [ ] maybe something like source code rewrite as in prettier
