@@ -157,9 +157,10 @@ export function lexer(file, str) {
     return null;
   }
 
-  const keywords = {
+  const KEYWORDS = {
     if: "If",
     else: "Else",
+    function: "Function",
   };
 
   function id() {
@@ -176,7 +177,7 @@ export function lexer(file, str) {
 
     const end = position();
 
-    const type = keywords[buffer];
+    const type = KEYWORDS[buffer];
     if (type) {
       return {
         type,
@@ -227,6 +228,26 @@ export function lexer(file, str) {
       const end = position();
       return {
         type: "CloseParent",
+        loc: { file, start, end },
+      };
+    }
+
+    if (char === "{") {
+      const start = position();
+      next();
+      const end = position();
+      return {
+        type: "OpenCurly",
+        loc: { file, start, end },
+      };
+    }
+
+    if (char === "}") {
+      const start = position();
+      next();
+      const end = position();
+      return {
+        type: "CloseCurly",
         loc: { file, start, end },
       };
     }

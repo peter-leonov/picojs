@@ -10,8 +10,11 @@ const COLORS = {
   Semicolon: "\x1b[37m\x1b[2m",
   OpenParent: "\x1b[37m\x1b[2m",
   CloseParent: "\x1b[37m\x1b[2m",
-  If: "\x1b[31m\x1b[2m",
-  Else: "\x1b[31m\x1b[2m",
+  OpenCurly: "\x1b[37m\x1b[2m",
+  CloseCurly: "\x1b[37m\x1b[2m",
+  If: "\x1b[31m",
+  Else: "\x1b[31m",
+  Function: "\x1b[31m",
 };
 
 export function highlight(content, tokens) {

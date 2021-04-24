@@ -152,7 +152,7 @@ export function parser(tokens) {
     return MulExpression(node);
   }
 
-  function IfExpression() {
+  function IfStatement() {
     const kw = maybeTake("If");
     if (!kw) return null;
     take("OpenParent", "expression");
@@ -190,6 +190,37 @@ export function parser(tokens) {
     };
   }
 
+  function FunctionStatement() {
+    const kw = maybeTake("Function");
+    if (!kw) return null;
+
+    // function ID (ID) BLOCK
+
+    const name = take("Id");
+
+    take("OpenParent", "expression");
+    const arg1 = take("Id");
+    take("CloseParent", "expression");
+
+    take("OpenCurly", "expression");
+    const body = Statements();
+    const close = take("CloseCurly", "expression");
+
+    const args = [arg1];
+
+    return {
+      type: "FunctionStatement",
+      name,
+      args,
+      body,
+      loc: {
+        file: kw.loc.file,
+        start: kw.loc.start,
+        end: close.loc.end,
+      },
+    };
+  }
+
   function Statement() {
     const expression = Expression();
     if (expression) {
@@ -205,10 +236,15 @@ export function parser(tokens) {
       };
     }
 
-    const ifstmt = IfExpression();
+    const ifstmt = IfStatement();
     if (ifstmt) {
       maybeTake("Semicolon", "expression");
       return ifstmt;
+    }
+
+    const fnstmt = FunctionStatement();
+    if (fnstmt) {
+      return fnstmt;
     }
 
     return null;
