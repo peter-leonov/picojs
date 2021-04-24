@@ -211,6 +211,19 @@ export function lexer(file, str) {
     };
   }
 
+  function colon() {
+    if (char !== ",") return null;
+    const start = position();
+    next();
+
+    const end = position();
+
+    return {
+      type: "Colon",
+      loc: { file, start, end },
+    };
+  }
+
   function parents() {
     if (char === "(") {
       const start = position();
@@ -312,6 +325,7 @@ export function lexer(file, str) {
     const token =
       whitespace() ||
       id() ||
+      colon() ||
       semicolon() ||
       parents() ||
       (mode === "expression" ? value() : operator()) ||

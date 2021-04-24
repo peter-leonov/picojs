@@ -190,23 +190,40 @@ export function parser(tokens) {
     };
   }
 
+  function ArgumentList() {
+    const args = [];
+    take("OpenParent", "expression");
+
+    // head
+    const id = maybeTake("Id");
+    if (id) {
+      args.push(id);
+    }
+
+    for (;;) {
+      const colon = maybeTake("Colon");
+      if (!colon) break;
+      const id = take("Id");
+      args.push(id);
+    }
+
+    take("CloseParent");
+
+    return args;
+  }
+
   function FunctionStatement() {
     const kw = maybeTake("Function");
     if (!kw) return null;
 
-    // function ID (ID) BLOCK
+    // function ID ARG_LIST BLOCK
 
     const name = take("Id");
-
-    take("OpenParent", "expression");
-    const arg1 = take("Id");
-    take("CloseParent", "expression");
+    const args = ArgumentList();
 
     take("OpenCurly", "expression");
     const body = Statements();
     const close = take("CloseCurly", "expression");
-
-    const args = [arg1];
 
     return {
       type: "FunctionStatement",

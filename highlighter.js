@@ -7,6 +7,7 @@ const COLORS = {
   Id: "\x1b[34m",
   NumericLiteral: "\x1b[36m",
   CommentToken: "\x1b[37m\x1b[2m",
+  Colon: "\x1b[37m\x1b[2m",
   Semicolon: "\x1b[37m\x1b[2m",
   OpenParent: "\x1b[37m\x1b[2m",
   CloseParent: "\x1b[37m\x1b[2m",

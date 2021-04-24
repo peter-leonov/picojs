@@ -1,6 +1,6 @@
 /hightlight/ / "me";
 if (you) can;
 
-function foo(a) {
+function foo(a, b) {
   7 + 9;
 }
