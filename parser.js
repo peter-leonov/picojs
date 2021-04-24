@@ -152,6 +152,23 @@ export function parser(tokens) {
     return MulExpression(node);
   }
 
+  function Block() {
+    const open = maybeTake("OpenCurly", "expression");
+    if (!open) return null;
+    const body = Statements();
+    const close = take("CloseCurly", "expression");
+
+    return {
+      type: "Block",
+      body,
+      loc: {
+        file: open.loc.file,
+        start: open.loc.start,
+        end: close.loc.start,
+      },
+    };
+  }
+
   function IfStatement() {
     const kw = maybeTake("If");
     if (!kw) return null;
@@ -161,7 +178,7 @@ export function parser(tokens) {
       panic("Expected an Expression for condition");
     }
     take("CloseParent", "expression");
-    const then = Statement();
+    const then = Block() || Statement();
     if (!then) {
       panic("Expected an Expression for then");
     }
@@ -169,7 +186,7 @@ export function parser(tokens) {
     let els = null;
     const elseKw = maybeTake("Else", "expression");
     if (elseKw) {
-      els = Statement();
+      els = Block() || Statement();
       if (!els) {
         panic("Expected an Expression for else");
       }
@@ -216,14 +233,13 @@ export function parser(tokens) {
     const kw = maybeTake("Function");
     if (!kw) return null;
 
-    // function ID ARG_LIST BLOCK
-
     const name = take("Id");
     const args = ArgumentList();
 
-    take("OpenCurly", "expression");
-    const body = Statements();
-    const close = take("CloseCurly", "expression");
+    const body = Block();
+    if (!body) {
+      panic("Expected a Bloc for the function");
+    }
 
     return {
       type: "FunctionStatement",
@@ -233,7 +249,7 @@ export function parser(tokens) {
       loc: {
         file: kw.loc.file,
         start: kw.loc.start,
-        end: close.loc.end,
+        end: body.loc.end,
       },
     };
   }
